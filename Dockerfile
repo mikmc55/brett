@@ -1,6 +1,9 @@
 # --- Build Stage ---
 FROM python:3.11 as builder
 
+# Install Docker inside the builder stage
+RUN apt-get update && apt-get install -y docker.io
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -44,10 +47,10 @@ WORKDIR /app
 COPY --from=builder /app/dist/*.whl /tmp/wheels/
 COPY --from=builder /tmp/wheels/*.whl /tmp/wheels/
 
-# # Install the application package along with all dependencies
+# Install the application package along with all dependencies
 RUN pip install /tmp/wheels/*.whl && rm -rf /tmp/wheels
 
-# # Copy static and template files
+# Copy static and template files
 COPY ./static /app/static
 COPY ./templates /app/templates
 
