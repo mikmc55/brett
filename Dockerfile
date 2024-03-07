@@ -53,9 +53,11 @@ COPY ./templates /app/templates
 
 COPY run.py /app/run.py
 
-ARG BUILD_VERSION=1.1.1 -t annatar:latest
+# Set the build version using the BUILD_VERSION argument
+ARG BUILD_VERSION=1.1.1
 ENV BUILD_VERSION=${BUILD_VERSION}
 
 COPY entrypoint.sh /app/entrypoint.sh
 
-CMD ["sh", "/app/entrypoint.sh"]
+# Set the image tag based on the build version
+CMD ["sh", "-c", "docker build -t annatar:${BUILD_VERSION} . && /app/entrypoint.sh"]
