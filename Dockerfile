@@ -1,9 +1,6 @@
 # --- Build Stage ---
 FROM python:3.11 as builder
 
-# Install Docker inside the builder stage
-RUN apt-get update && apt-get install -y docker.io
-
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -56,11 +53,11 @@ COPY ./templates /app/templates
 
 COPY run.py /app/run.py
 
-# Set the build version using the BUILD_VERSION argument
+# Set a version label for your image
 ARG BUILD_VERSION=1.1.1
-ENV BUILD_VERSION=${BUILD_VERSION}
+LABEL version=$BUILD_VERSION
 
 COPY entrypoint.sh /app/entrypoint.sh
 
-# Set the image tag based on the build version
-CMD ["sh", "-c", "docker build -t annatar:${BUILD_VERSION} . && /app/entrypoint.sh"]
+# CMD for running your application
+CMD ["sh", "/app/entrypoint.sh"]
